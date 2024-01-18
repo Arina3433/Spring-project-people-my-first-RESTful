@@ -10,11 +10,14 @@ public class PeopleNewApplication {
         SpringApplication.run(PeopleNewApplication.class, args);
     }
 
-    // {
-    //    "email": "tom@mail.ru",
-    //    "name": "Tom",
-    //    "surname": "Smith",
-    //    "phoneNumber": "+7 936 472 39 35"
-    //}
+     /*
+     {
+        "id": 1,
+        "email": "steve@gmail.com",
+        "name": "Steve",
+        "surname": "Smith",
+        "phoneNumber": "+7 999 888 77 66"
+    }
+      */
 
 }

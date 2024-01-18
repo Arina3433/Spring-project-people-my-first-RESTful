@@ -21,4 +21,11 @@ public class People {
     private String surname;
     private String phoneNumber;
 
+    public String toStringInDeleteMethod() {
+        return name + ": " +
+                "surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }

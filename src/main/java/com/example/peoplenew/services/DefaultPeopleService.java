@@ -3,6 +3,7 @@ package com.example.peoplenew.services;
 import com.example.peoplenew.dtos.PeopleDto;
 import com.example.peoplenew.entities.People;
 import com.example.peoplenew.repositories.PeopleRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,20 +38,24 @@ public class DefaultPeopleService implements PeopleService {
     }
 
     @Override
-    public void update(PeopleDto peopleDto) {
-        People person = peopleRepository.findPeopleByName(peopleDto.getName()).orElseThrow(() ->
-                new IllegalArgumentException("No user by " + peopleDto.getName() + " name"));
-        ;
+    public People update(PeopleDto peopleDto) {
+        People person = peopleRepository.findById(peopleDto.getId()).orElseThrow(() ->
+                new IllegalArgumentException("No user by " + peopleDto.getId() + " id"));
 
         person.setEmail(peopleDto.getEmail());
         person.setName(peopleDto.getName());
         person.setSurname(peopleDto.getSurname());
         person.setPhoneNumber(peopleDto.getPhoneNumber());
 
-        peopleRepository.save(person);
+        return peopleRepository.save(person);
     }
 
+
     @Override
+    @Transactional
+    // @Transactional - указывает, что метод должен быть выполнен в рамках одной транзакции
+    // Транзакция — группа последовательных операций с базой данных, которая представляет
+    // собой логическую единицу работы с данными
     public void delete(String name) {
         peopleRepository.deleteByName(name);
     }

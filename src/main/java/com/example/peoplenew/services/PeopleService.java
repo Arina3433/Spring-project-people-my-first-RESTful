@@ -13,7 +13,7 @@ public interface PeopleService {
 
     List<People> getAll();
 
-    void update(PeopleDto peopleDto);
+    People update(PeopleDto peopleDto);
 
     void delete(String email);
 
