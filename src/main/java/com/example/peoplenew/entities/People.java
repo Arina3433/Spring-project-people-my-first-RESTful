@@ -1,6 +1,5 @@
 package com.example.peoplenew.entities;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,14 +22,6 @@ public class People {
     private String surname;
     private String phoneNumber;
 
-    public String toStringInDeleteMethod() {
-        return name + ": " +
-                "surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
-    }
-
-    @OneToMany(mappedBy = "people")
+    @OneToMany(mappedBy = "people", fetch = FetchType.LAZY)
     private List<Tasks> tasks;
 }

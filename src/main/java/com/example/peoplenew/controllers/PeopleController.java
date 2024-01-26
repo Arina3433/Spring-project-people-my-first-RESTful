@@ -1,7 +1,6 @@
 package com.example.peoplenew.controllers;
 
 import com.example.peoplenew.dtos.PeopleDto;
-import com.example.peoplenew.entities.People;
 import com.example.peoplenew.services.DefaultPeopleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,68 +17,48 @@ public class PeopleController {
     private final DefaultPeopleService defaultPeopleService;
 
     @PostMapping("/create")
-    ResponseEntity<People> create(@RequestBody PeopleDto peopleDto) {
+    ResponseEntity<PeopleDto> create(@RequestBody PeopleDto peopleDto) {
         // @RequestBody сопоставляет тело HttpRequest с объектом передачи или домена,
         // обеспечивая автоматическую десериализацию входящего тела HttpRequest в объект Java
 
-        People person = defaultPeopleService.create(peopleDto);
-        return ResponseEntity.ok(person);
+        return ResponseEntity.ok(defaultPeopleService.create(peopleDto));
         // Чтобы в ответе показывалась сущность, созданная в этом запросе
     }
 
     @GetMapping("/get_one")
-    ResponseEntity<People> getFromParameter(@RequestParam("name") String name) {
+    ResponseEntity<PeopleDto> getFromParameter(@RequestParam("id") Long id) {
         // @RequestParam - для извлечения параметров запроса (только параметров)
         // когда параметры передаются в URL после символа '?'
 
-        People person = defaultPeopleService.get(name);
-        return ResponseEntity.ok(person);
+        return ResponseEntity.ok(defaultPeopleService.get(id));
     }
 
-    @GetMapping("/get_one/{name}")
-    ResponseEntity<People> getFromUrl(@PathVariable("name") String name) {
+    @GetMapping("/get_one/{id}")
+    ResponseEntity<PeopleDto> getFromUrl(@PathVariable("id") Long id) {
         // @PathVariable - для связывания значений из URL
-        // когда параметры передаются в URL (/get/Ann)
+        // когда параметры передаются в URL (/get/12)
 
-        People person = defaultPeopleService.get(name);
-        return ResponseEntity.ok(person);
+        return ResponseEntity.ok(defaultPeopleService.get(id));
     }
 
     @GetMapping("/get_all")
-    ResponseEntity<List<People>> getAll() {
-
-        List<People> peopleList = defaultPeopleService.getAll();
-        return ResponseEntity.ok(peopleList);
-    }
-
-    @PutMapping("/update")
-    ResponseEntity<People> updateFromBody(@RequestBody PeopleDto peopleDto) {
-        return ResponseEntity.ok(defaultPeopleService.update(peopleDto));
+    ResponseEntity<List<PeopleDto>> getAll() {
+        return ResponseEntity.ok(defaultPeopleService.getAll());
     }
 
     @PutMapping("/update/{id}")
-    ResponseEntity<People> updateFromUrl(@RequestBody PeopleDto peopleDto,
-                                         @PathVariable("id") Long id) {
-        peopleDto.setId(id);
-        return ResponseEntity.ok(defaultPeopleService.update(peopleDto));
+    ResponseEntity<PeopleDto> updateFromUrl(@RequestBody PeopleDto peopleDto,
+                                            @PathVariable("id") Long id) {
+        return ResponseEntity.ok(defaultPeopleService.update(peopleDto, id));
     }
 
-    @DeleteMapping("/delete_one")
-    String deleteFromParameter(@RequestParam("name") String name) {
+    @DeleteMapping("/delete_one/{id}")
+    String deleteFromUrl(@PathVariable("id") Long id) {
 
-        People person = defaultPeopleService.get(name);
-        defaultPeopleService.delete(name);
+        PeopleDto peopleDto = defaultPeopleService.get(id);
+        defaultPeopleService.delete(id);
 
-        return "Deleted:\n" + person.toStringInDeleteMethod();
-    }
-
-    @DeleteMapping("/delete_one/{name}")
-    String deleteFromUrl(@PathVariable("name") String name) {
-
-        People person = defaultPeopleService.get(name);
-        defaultPeopleService.delete(name);
-
-        return "Deleted:\n" + person.toStringInDeleteMethod();
+        return "Deleted:\n" + peopleDto;
     }
 
     @DeleteMapping("/delete_all")

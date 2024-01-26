@@ -1,21 +1,20 @@
 package com.example.peoplenew.services;
 
 import com.example.peoplenew.dtos.PeopleDto;
-import com.example.peoplenew.entities.People;
 
 import java.util.List;
 
 public interface PeopleService {
 
-    People create(PeopleDto peopleDto);
+    PeopleDto create(PeopleDto peopleDto);
 
-    People get(String email);
+    PeopleDto get(Long id);
 
-    List<People> getAll();
+    List<PeopleDto> getAll();
 
-    People update(PeopleDto peopleDto);
+    PeopleDto update(PeopleDto peopleDto, Long id);
 
-    void delete(String email);
+    void delete(Long id);
 
     void deleteAll();
 

@@ -1,11 +1,13 @@
 package com.example.peoplenew.services;
 
+import com.example.peoplenew.convert.PeopleDtoConverter;
 import com.example.peoplenew.dtos.PeopleDto;
 import com.example.peoplenew.entities.People;
 import com.example.peoplenew.repositories.PeopleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -13,41 +15,50 @@ import java.util.List;
 @RequiredArgsConstructor // Создает конструкторы для всех полей которые либо final, либо @NotNull
 public class DefaultPeopleService implements PeopleService {
     private final PeopleRepository peopleRepository;
+    private final PeopleDtoConverter peopleDtoConverter;
 
     @Override
-    public People create(PeopleDto peopleDto) {
-        People person = new People();
+    public PeopleDto create(PeopleDto peopleDto) {
+        peopleRepository.save(peopleDtoConverter.convertPeopleDtoToPeople(peopleDto));
 
-        person.setEmail(peopleDto.getEmail());
-        person.setName(peopleDto.getName());
-        person.setSurname(peopleDto.getSurname());
-        person.setPhoneNumber(peopleDto.getPhoneNumber());
-
-        return peopleRepository.save(person);
+        return peopleDto;
     }
 
     @Override
-    public People get(String name) {
-        return peopleRepository.findPeopleByName(name).orElseThrow(() ->
-                new IllegalArgumentException("No user by " + name + " name"));
+    public PeopleDto get(Long id) {
+
+        People person = peopleRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("No user by " + id + " id"));
+
+        return peopleDtoConverter.convertPeopleToPeopleDto(person);
     }
 
     @Override
-    public List<People> getAll() {
-        return peopleRepository.findAll();
+    public List<PeopleDto> getAll() {
+        return peopleDtoConverter.convertPeopleListToPeopleDtoList(peopleRepository.findAll());
     }
 
     @Override
-    public People update(PeopleDto peopleDto) {
-        People person = peopleRepository.findById(peopleDto.getId()).orElseThrow(() ->
-                new IllegalArgumentException("No user by " + peopleDto.getId() + " id"));
+    public PeopleDto update(PeopleDto peopleDto, Long id) {
+        People person = peopleRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("No user by " + id + " id"));
 
-        person.setEmail(peopleDto.getEmail());
-        person.setName(peopleDto.getName());
-        person.setSurname(peopleDto.getSurname());
-        person.setPhoneNumber(peopleDto.getPhoneNumber());
+        if (StringUtils.hasText(peopleDto.getEmail())) {
+            person.setEmail(peopleDto.getEmail());
+        }
+        if (StringUtils.hasText(peopleDto.getName())) {
+            person.setName(peopleDto.getName());
+        }
+        if (StringUtils.hasText(peopleDto.getSurname())) {
+            person.setSurname(peopleDto.getSurname());
+        }
+        if (StringUtils.hasText(peopleDto.getPhoneNumber())) {
+            person.setPhoneNumber(peopleDto.getPhoneNumber());
+        }
 
-        return peopleRepository.save(person);
+        peopleRepository.save(person);
+
+        return peopleDtoConverter.convertPeopleToPeopleDto(person);
     }
 
 
@@ -56,8 +67,8 @@ public class DefaultPeopleService implements PeopleService {
     // @Transactional - указывает, что метод должен быть выполнен в рамках одной транзакции
     // Транзакция — группа последовательных операций с базой данных, которая представляет
     // собой логическую единицу работы с данными
-    public void delete(String name) {
-        peopleRepository.deleteByName(name);
+    public void delete(Long id) {
+        peopleRepository.deleteById(id);
     }
 
     @Override
