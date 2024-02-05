@@ -10,6 +10,8 @@ public interface PeopleService {
 
     PeopleDto get(Long id);
 
+    PeopleDto getWithTasks(Long id);
+
     List<PeopleDto> getAll();
 
     PeopleDto update(PeopleDto peopleDto, Long id);

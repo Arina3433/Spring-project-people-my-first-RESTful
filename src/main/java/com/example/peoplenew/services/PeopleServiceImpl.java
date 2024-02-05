@@ -4,6 +4,7 @@ import com.example.peoplenew.convert.PeopleDtoConverter;
 import com.example.peoplenew.dtos.PeopleDto;
 import com.example.peoplenew.entities.People;
 import com.example.peoplenew.repositories.PeopleRepository;
+import com.example.peoplenew.repositories.TasksRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,15 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor // Создает конструкторы для всех полей которые либо final, либо @NotNull
-public class DefaultPeopleService implements PeopleService {
+public class PeopleServiceImpl implements PeopleService {
     private final PeopleRepository peopleRepository;
+
+    private final TasksRepository tasksRepository;
     private final PeopleDtoConverter peopleDtoConverter;
 
     @Override
     public PeopleDto create(PeopleDto peopleDto) {
-        peopleRepository.save(peopleDtoConverter.convertPeopleDtoToPeople(peopleDto));
+        peopleRepository.save(peopleDtoConverter.convertToPeople(peopleDto));
 
         return peopleDto;
     }
@@ -30,12 +33,24 @@ public class DefaultPeopleService implements PeopleService {
         People person = peopleRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("No user by " + id + " id"));
 
-        return peopleDtoConverter.convertPeopleToPeopleDto(person);
+        return peopleDtoConverter.convertToPeopleDto(person);
+    }
+
+    @Override
+    public PeopleDto getWithTasks(Long id) {
+
+        PeopleDto peopleDto = peopleDtoConverter.convertToPeopleDto(peopleRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("No user by " + id + " id")));
+
+        peopleDto.setTasks(tasksRepository.findTasksByPeopleId(id).orElseThrow(() ->
+                new IllegalArgumentException("No user by " + id + " id")));
+
+        return peopleDto;
     }
 
     @Override
     public List<PeopleDto> getAll() {
-        return peopleDtoConverter.convertPeopleListToPeopleDtoList(peopleRepository.findAll());
+        return peopleDtoConverter.convertToPeopleDtoList(peopleRepository.findAll());
     }
 
     @Override
@@ -58,7 +73,7 @@ public class DefaultPeopleService implements PeopleService {
 
         peopleRepository.save(person);
 
-        return peopleDtoConverter.convertPeopleToPeopleDto(person);
+        return peopleDtoConverter.convertToPeopleDto(person);
     }
 
 

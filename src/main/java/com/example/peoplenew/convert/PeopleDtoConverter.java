@@ -15,15 +15,15 @@ public class PeopleDtoConverter {
 
     private final ModelMapper modelMapper;
 
-    public People convertPeopleDtoToPeople(PeopleDto peopleDto) {
+    public People convertToPeople(PeopleDto peopleDto) {
         return modelMapper.map(peopleDto, People.class);
     }
 
-    public PeopleDto convertPeopleToPeopleDto(People people) {
+    public PeopleDto convertToPeopleDto(People people) {
         return modelMapper.map(people, PeopleDto.class);
     }
 
-    public List<PeopleDto> convertPeopleListToPeopleDtoList(List<People> peopleList) {
+    public List<PeopleDto> convertToPeopleDtoList(List<People> peopleList) {
 
         return peopleList.stream()
                 .map(people -> modelMapper.map(people, PeopleDto.class))

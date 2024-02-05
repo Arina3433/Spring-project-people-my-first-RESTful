@@ -22,6 +22,18 @@ public class People {
     private String surname;
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "people", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "people", fetch = FetchType.LAZY)
+    // cascade описывает, что должно происходить с зависимыми объектами, если мы меняем их родительский (главный) объект
+    // CascadeType.ALL означает, что все действия, которые мы выполняем с родительским объектом,
+    // нужно повторить и для его зависимых объектов
+
+    // mappedBy указывает на поле владельца связи
+    // ("people" - объект People people в классе Tasks, именно так устанавливается связь)
     private List<Tasks> tasks;
+
+    public List<Tasks> addTasks(Tasks task) {
+        tasks.add(task);
+
+        return tasks;
+    }
 }

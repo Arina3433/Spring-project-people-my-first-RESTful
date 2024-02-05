@@ -11,13 +11,17 @@ public class PeopleNewApplication {
     }
 
      /*
-     {
-        "id": 1,
-        "email": "steve@gmail.com",
-        "name": "Steve",
-        "surname": "Smith",
-        "phoneNumber": "+7 999 888 77 66"
-    }
-      */
+   {
+"email": "steve@gmail.com",
+"name": "Steve",
+"surname": "Smith",
+"phoneNumber": "+7 999 888 77 66"
+}
 
+   {
+"name": "to check something",
+"deadline": "10pm 21.08.24",
+"categories": "check"
+}
+      */
 }
