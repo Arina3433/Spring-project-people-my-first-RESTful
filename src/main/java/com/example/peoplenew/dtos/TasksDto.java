@@ -1,8 +1,6 @@
 package com.example.peoplenew.dtos;
 
 import com.example.peoplenew.entities.Categories;
-import com.example.peoplenew.entities.People;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,7 +20,6 @@ public class TasksDto {
     // Хранит enum в виде строки
     private Categories categories;
 
-    @JsonIgnore
-    private People people;
+    private Long peopleId;
 
 }

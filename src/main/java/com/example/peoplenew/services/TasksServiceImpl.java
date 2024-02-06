@@ -22,6 +22,7 @@ public class TasksServiceImpl implements TasksService {
     private final TasksDtoConverter tasksDtoConverter;
 
     @Override
+    @Transactional
     public TasksDto create(Long peopleId, TasksDto tasksDto) {
         People person = peopleRepository.findById(peopleId).orElseThrow(() ->
                 new IllegalArgumentException("No user by " + peopleId + " id"));
@@ -29,16 +30,16 @@ public class TasksServiceImpl implements TasksService {
         Tasks tasks = tasksDtoConverter.convertToTasks(tasksDto);
         tasks.setPeople(person);
 
-//        int taskNumber = person.getTasks().size() + 1;
-//        tasks.setTaskNumber(taskNumber);
+        tasks = tasksRepository.save(tasks);
 
-        tasksRepository.save(tasks);
+        tasksDto.setId(tasks.getId());
+        tasksDto.setPeopleId(peopleId);
 
         return tasksDto;
     }
 
     @Override
-    public List<TasksDto> get(Long peopleId) {
+    public List<TasksDto> getAllByPeopleId(Long peopleId) {
         List<Tasks> tasksList = tasksRepository.findTasksByPeopleId(peopleId).orElseThrow(() ->
                 new IllegalArgumentException("No user by " + peopleId + " id"));
 
@@ -46,15 +47,7 @@ public class TasksServiceImpl implements TasksService {
     }
 
     @Override
-    public TasksDto getOne(Long id) {
-
-        Tasks tasks = tasksRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("No task by " + id + " id"));
-
-        return tasksDtoConverter.convertToTasksDto(tasks);
-    }
-
-    @Override
+    @Transactional
     public TasksDto update(Long id, TasksDto tasksDto) {
 
         Tasks tasks = tasksRepository.findById(id).orElseThrow(() ->
@@ -80,13 +73,17 @@ public class TasksServiceImpl implements TasksService {
     // @Transactional - указывает, что метод должен быть выполнен в рамках одной транзакции
     // Транзакция — группа последовательных операций с базой данных, которая представляет
     // собой логическую единицу работы с данными
-    public void delete(Long id) {
+    public String delete(Long id) {
         tasksRepository.deleteById(id);
+
+        return "Task with id " + id + " has been deleted";
     }
 
     @Override
     @Transactional
-    public void deleteAll(Long peopleId) {
+    public String deleteAllTasks(Long peopleId) {
         tasksRepository.deleteByPeopleId(peopleId);
+
+        return "All tasks of a person with id " + peopleId + " have been deleted.";
     }
 }

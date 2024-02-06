@@ -25,12 +25,11 @@ public class TasksController {
         // обеспечивая автоматическую десериализацию входящего тела HttpRequest в объект Java
 
         return ResponseEntity.ok(tasksServiceImpl.create(peopleId, tasksDto));
-        // Чтобы в ответе показывалась сущность, созданная в этом запросе
     }
 
     @GetMapping("/get_tasks_of/{people_id}")
     ResponseEntity<List<TasksDto>> getAllTasks(@PathVariable("people_id") Long peopleId) {
-        return ResponseEntity.ok(tasksServiceImpl.get(peopleId));
+        return ResponseEntity.ok(tasksServiceImpl.getAllByPeopleId(peopleId));
     }
 
     @PutMapping("/update/{id}")
@@ -40,19 +39,14 @@ public class TasksController {
     }
 
     @DeleteMapping("/delete_task/{id}")
-    String deleteTask(@PathVariable("id") Long id) {
+    ResponseEntity<String> deleteTask(@PathVariable("id") Long id) {
 
-        TasksDto tasksDto = tasksServiceImpl.getOne(id);
-        // Можно перенести в сервисы, а можно вообще убрать
-        tasksServiceImpl.delete(id);
-
-        return "Deleted:\n" + tasksDto;
+        return ResponseEntity.ok(tasksServiceImpl.delete(id));
     }
 
     @DeleteMapping("/delete_all/{people_id}")
-    String deleteAllTasks(@PathVariable("people_id") Long peopleId) {
+    ResponseEntity<String> deleteAllTasks(@PathVariable("people_id") Long peopleId) {
 
-        tasksServiceImpl.deleteAll(peopleId);
-        return "All is deleted";
+        return ResponseEntity.ok(tasksServiceImpl.deleteAllTasks(peopleId));
     }
 }

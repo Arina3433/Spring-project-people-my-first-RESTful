@@ -1,6 +1,7 @@
 package com.example.peoplenew.controllers;
 
-import com.example.peoplenew.dtos.PeopleDto;
+import com.example.peoplenew.dtos.PeopleDtoWithTasks;
+import com.example.peoplenew.dtos.PeopleDtoWithoutTasks;
 import com.example.peoplenew.services.PeopleServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class PeopleController {
     private final PeopleServiceImpl peopleService;
 
     @PostMapping("/create")
-    ResponseEntity<PeopleDto> create(@RequestBody PeopleDto peopleDto) {
+    ResponseEntity<PeopleDtoWithoutTasks> create(@RequestBody PeopleDtoWithoutTasks peopleDto) {
         // @RequestBody сопоставляет тело HttpRequest с объектом передачи или домена,
         // обеспечивая автоматическую десериализацию входящего тела HttpRequest в объект Java
 
@@ -26,7 +27,7 @@ public class PeopleController {
     }
 
     @GetMapping("/get_one")
-    ResponseEntity<PeopleDto> getFromParameter(@RequestParam("id") Long id) {
+    ResponseEntity<PeopleDtoWithoutTasks> getFromParameter(@RequestParam("id") Long id) {
         // @RequestParam - для извлечения параметров запроса (только параметров)
         // когда параметры передаются в URL после символа '?'
 
@@ -34,7 +35,7 @@ public class PeopleController {
     }
 
     @GetMapping("/get_one/{id}")
-    ResponseEntity<PeopleDto> getFromUrl(@PathVariable("id") Long id) {
+    ResponseEntity<PeopleDtoWithoutTasks> getFromUrl(@PathVariable("id") Long id) {
         // @PathVariable - для связывания значений из URL
         // когда параметры передаются в URL (/get/12)
 
@@ -42,36 +43,38 @@ public class PeopleController {
     }
 
     @GetMapping("/get_one_with_tasks/{id}")
-    ResponseEntity<PeopleDto> getFromUrlWithTasks(@PathVariable("id") Long id) {
+    ResponseEntity<PeopleDtoWithTasks> getFromUrlWithTasks(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok(peopleService.getWithTasks(id));
     }
 
     @GetMapping("/get_all")
-    ResponseEntity<List<PeopleDto>> getAll() {
+    ResponseEntity<List<PeopleDtoWithoutTasks>> getAll() {
         return ResponseEntity.ok(peopleService.getAll());
     }
 
+    @GetMapping("/get_all_with_tasks")
+    ResponseEntity<List<PeopleDtoWithTasks>> getAllWithTasks() {
+        return ResponseEntity.ok(peopleService.getAllWithTasks());
+    }
+
     @PutMapping("/update/{id}")
-    ResponseEntity<PeopleDto> updateFromUrl(@RequestBody PeopleDto peopleDto,
-                                            @PathVariable("id") Long id) {
+    ResponseEntity<PeopleDtoWithoutTasks> updateFromUrl(@RequestBody PeopleDtoWithoutTasks peopleDto,
+                                                        @PathVariable("id") Long id) {
+
         return ResponseEntity.ok(peopleService.update(peopleDto, id));
     }
 
     @DeleteMapping("/delete_one/{id}")
-    String deleteFromUrl(@PathVariable("id") Long id) {
+    ResponseEntity<String> deleteFromUrl(@PathVariable("id") Long id) {
 
-        PeopleDto peopleDto = peopleService.get(id);
-        peopleService.delete(id);
-
-        return "Deleted:\n" + peopleDto;
+        return ResponseEntity.ok(peopleService.delete(id));
     }
 
     @DeleteMapping("/delete_all")
-    String deleteAll() {
+    ResponseEntity<String> deleteAll() {
 
-        peopleService.deleteAll();
-        return "All is deleted";
+        return ResponseEntity.ok(peopleService.deleteAll());
     }
 
 }

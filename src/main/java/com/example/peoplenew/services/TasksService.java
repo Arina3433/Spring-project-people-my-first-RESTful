@@ -8,13 +8,11 @@ public interface TasksService {
 
     TasksDto create(Long peopleId, TasksDto tasksDto);
 
-    List<TasksDto> get(Long peopleId);
+    List<TasksDto> getAllByPeopleId(Long peopleId);
 
     TasksDto update(Long id, TasksDto tasksDto);
 
-    void delete(Long id);
+    String delete(Long id);
 
-    void deleteAll(Long peopleId);
-
-    TasksDto getOne(Long id);
+    String deleteAllTasks(Long peopleId);
 }

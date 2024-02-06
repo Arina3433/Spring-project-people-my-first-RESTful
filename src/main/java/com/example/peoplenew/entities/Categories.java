@@ -8,10 +8,6 @@ public enum Categories {
     @JsonProperty("monitoring")
     MONITORING,
     @JsonProperty("realization")
-    REALIZATION;
+    REALIZATION
 
-//    public String getCategory() {
-//        return name();
-//        // Возвращает строковое представление категории
-//    }
 }

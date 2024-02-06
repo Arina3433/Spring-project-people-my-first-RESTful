@@ -31,9 +31,4 @@ public class People {
     // ("people" - объект People people в классе Tasks, именно так устанавливается связь)
     private List<Tasks> tasks;
 
-    public List<Tasks> addTasks(Tasks task) {
-        tasks.add(task);
-
-        return tasks;
-    }
 }

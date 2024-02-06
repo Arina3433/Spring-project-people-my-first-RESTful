@@ -1,23 +1,25 @@
 package com.example.peoplenew.services;
 
-import com.example.peoplenew.dtos.PeopleDto;
+import com.example.peoplenew.dtos.PeopleDtoWithTasks;
+import com.example.peoplenew.dtos.PeopleDtoWithoutTasks;
 
 import java.util.List;
 
 public interface PeopleService {
 
-    PeopleDto create(PeopleDto peopleDto);
+    PeopleDtoWithoutTasks create(PeopleDtoWithoutTasks peopleDto);
 
-    PeopleDto get(Long id);
+    PeopleDtoWithoutTasks get(Long id);
 
-    PeopleDto getWithTasks(Long id);
+    PeopleDtoWithTasks getWithTasks(Long id);
 
-    List<PeopleDto> getAll();
+    List<PeopleDtoWithoutTasks> getAll();
 
-    PeopleDto update(PeopleDto peopleDto, Long id);
+    List<PeopleDtoWithTasks> getAllWithTasks();
 
-    void delete(Long id);
+    PeopleDtoWithoutTasks update(PeopleDtoWithoutTasks peopleDto, Long id);
 
-    void deleteAll();
+    String delete(Long id);
 
+    String deleteAll();
 }
